@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14 Şubat | Digital Vault</title>
+    <!-- Importing New Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Montserrat:wght@300;400;600&family=Pinyon+Script&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --rose-gold: rgba(224, 191, 184, 0.8);
+            --rose-gold-glow: rgba(224, 191, 184, 0.4);
+            --soft-red: #ff6b6b;
+            --soft-red-glow: rgba(255, 107, 107, 0.6);
+            --glass-surface: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --neon-accent: var(--soft-red);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            /* Radial gradient backup if particles fail */
+            background-image: radial-gradient(circle at center, #1a0505 0%, #000000 70%);
+            color: #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+        }
+
+        /* --- Particle Container --- */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            opacity: 0;
+            animation: rise 10s infinite linear;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.5;
+            }
+
+            80% {
+                opacity: 0.2;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* --- Main Container --- */
+        .stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            z-index: 10;
+            padding-bottom: 150px;
+            /* Shifting center upwards */
+        }
+
+        /* --- Countdown Overlay --- */
+        .countdown-container {
+            position: relative;
+            /* Removed absolute top positioning */
+            margin-bottom: 50px;
+            /* Space between countdown and box */
+            z-index: 20;
+            text-align: center;
+            transition: opacity 1s ease, transform 1s ease;
+            pointer-events: none;
+        }
+
+        .countdown-container.hidden {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 0.3rem;
+            color: var(--soft-red);
+            text-shadow: 0 0 15px var(--soft-red-glow);
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: #ccc;
+        }
+
+        .headline {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+            color: var(--rose-gold);
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--rose-gold-glow);
+        }
+
+        /* --- 3D Digital Box (The Vault) --- */
+        .vault-wrapper {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            transform-style: preserve-3d;
+            animation: float 5s ease-in-out infinite;
+            /* Hovering Effect */
+            margin-top: 40px;
+            /* Adjusted from 100px to raise it up */
+        }
+
+        .vault-box {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(30deg);
+            transition: transform 1s ease;
+        }
+
+        .face {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            background: rgba(255, 255, 255, 0.02);
+            /* More transparent */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255, 107, 107, 0.05);
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Neon Strips on Edges */
+        .face::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid var(--soft-red);
+            opacity: 0.3;
+            box-shadow: 0 0 15px var(--soft-red);
+            pointer-events: none;
+        }
+
+        /* 3D Box Construction */
+        .face.front {
+            transform: translateZ(160px);
+        }
+
+        .face.back {
+            transform: rotateY(180deg) translateZ(160px);
+        }
+
+        .face.right {
+            transform: rotateY(90deg) translateZ(160px);
+        }
+
+        .face.left {
+            transform: rotateY(-90deg) translateZ(160px);
+        }
+
+        .face.top {
+            transform: rotateX(90deg) translateZ(160px);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+        }
+
+        .face.bottom {
+            transform: rotateX(-90deg) translateZ(160px);
+            box-shadow: 0 0 60px var(--soft-red-glow);
+        }
+
+        /* Lock Icon */
+        .lock-icon {
+            font-size: 3rem;
+            color: var(--soft-red);
+            text-shadow: 0 0 20px var(--soft-red);
+            transition: opacity 0.5s;
+        }
+
+        /* Unlock Button */
+        .unlock-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--soft-red);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px var(--soft-red-glow);
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .unlock-btn:hover {
+            background: var(--soft-red);
+            box-shadow: 0 0 30px var(--soft-red);
+            transform: translate(-50%, -50%) scale(1.1);
+            /* Growth effect */
+            text-shadow: 0 0 5px white;
+        }
+
+        .unlock-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- Animation States for Opening (Smooth Reveal) --- */
+
+        /* 1. Stop floating and center */
+        .stage.opening .vault-wrapper {
+            animation: none;
+            transition: transform 1.5s ease;
+            transform: rotateX(-10deg) rotateY(0deg) scale(1);
+        }
+
+        /* 2. Move Lid Up and Fade Out Front */
+        .stage.opened .face.top {
+            transform: rotateX(90deg) translateZ(160px) translateY(-300px) rotateX(20deg);
+            opacity: 0.5;
+        }
+
+        .stage.opened .face.front {
+            opacity: 0;
+            transform: translateZ(200px) scale(1.1);
+            /* Move towards camera and vanish */
+        }
+
+        .stage.opened .face.left,
+        .stage.opened .face.right,
+        .stage.opened .face.back,
+        .stage.opened .face.bottom {
+            opacity: 0.1;
+            /* Dim other sides */
+        }
+
+        .stage.opened .lock-icon {
+            opacity: 0;
+        }
+
+        .stage.opened .unlock-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- Content Area (Surprise) --- */
+        .content-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 20%) scale(0.8);
+            /* Start lower */
+            width: min(90%, 700px);
+            max-height: 85vh;
+            background: rgba(15, 5, 5, 0.9);
+            border: 1px solid var(--rose-gold);
+            border-radius: 12px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            overflow-y: auto;
+            transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 107, 107, 0.1);
+            backdrop-filter: blur(25px);
+        }
+
+        .stage.opened .content-card {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .letter-content {
+            text-align: center;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .letter-title {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 3.5rem;
+            color: var(--soft-red);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--soft-red-glow);
+        }
+
+        .letter-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #eee;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* --- Polaroid Gallery --- */
+        .gallery-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .polaroid {
+            position: relative;
+            width: 180px;
+            background: rgba(30, 5, 5, 0.85);
+            /* Dark Romantic Theme */
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--rose-gold);
+            padding: 10px 10px 50px 10px;
+            /* More space for text */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 107, 107, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border-radius: 4px;
+            transform-origin: center;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: 2px;
+        }
+
+        .polaroid::after {
+            content: attr(data-caption);
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Pinyon Script', cursive;
+            /* Romantic Script Font */
+            color: var(--soft-red);
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Messy Pile Effect via Rotations */
+        .polaroid:nth-child(1) {
+            transform: rotate(-4deg);
+        }
+
+        .polaroid:nth-child(2) {
+            transform: rotate(3deg) translateY(-10px);
+        }
+
+        .polaroid:nth-child(3) {
+            transform: rotate(-5deg);
+        }
+
+        /* Hover Interaction */
+        .polaroid:hover {
+            transform: scale(1.15) rotate(0deg) !important;
+            z-index: 50;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.6);
+            /* Soft red glow */
+        }
+
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                /* Prevent horizontal scroll */
+            }
+
+            .stage {
+                padding-top: 30px;
+                padding-bottom: 30px;
+                padding-bottom: 80px;
+                /* Extra room at bottom */
+                transform: none;
+                /* Remove global scale */
+                gap: 20px;
+            }
+
+            .countdown-container {
+                margin-bottom: 30px;
+            }
+
+            .headline {
+                font-size: 0.9rem;
+                letter-spacing: 0.15rem;
+            }
+
+            .timer-display {
+                font-size: 1.3rem;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                /* Allow wrapping if needed */
+            }
+
+            .time-label {
+                font-size: 0.5rem;
+            }
+
+            .vault-wrapper {
+                width: 200px;
+                height: 200px;
+                margin-top: 10px;
+                animation: none !important;
+                /* Disable floating on mobile */
+            }
+
+            .vault-box {
+                transform: rotateX(-10deg) rotateY(15deg) scale(0.8);
+                /* Less dramatic 3D, smaller */
+            }
+
+            .face {
+                width: 200px;
+                height: 200px;
+            }
+
+            .face.front {
+                transform: translateZ(100px);
+            }
+
+            .face.back {
+                transform: rotateY(180deg) translateZ(100px);
+            }
+
+            .face.right {
+                transform: rotateY(90deg) translateZ(100px);
+            }
+
+            .face.left {
+                transform: rotateY(-90deg) translateZ(100px);
+            }
+
+            .face.top {
+                transform: rotateX(90deg) translateZ(100px);
+            }
+
+            .face.bottom {
+                transform: rotateX(-90deg) translateZ(100px);
+            }
+
+            .lock-icon {
+                font-size: 2rem;
+            }
+
+            .unlock-btn {
+                font-size: 0.8rem;
+                padding: 0.7rem 1.5rem;
+                white-space: normal;
+                /* Allow text wrap */
+            }
+
+            .content-card {
+                width: 92%;
+                padding: 1.2rem;
+                max-height: none;
+                /* Allow natural height */
+                transform: translate(-50%, 20%) scale(0.95);
+            }
+
+            .stage.opened .content-card {
+                transform: translate(-50%, -45%) scale(1);
+            }
+
+            .letter-title {
+                font-size: 2rem;
+            }
+
+            .letter-text {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            .polaroid {
+                width: 120px;
+                padding: 8px 8px 40px 8px;
+            }
+
+            .polaroid img {
+                height: 100px;
+            }
+
+            .polaroid::after {
+                font-size: 1rem;
+                bottom: 10px;
+            }
+
+            .gallery-area {
+                gap: 0.8rem;
+                justify-content: center;
+            }
+
+            /* Simplify polaroid rotations for mobile */
+            .polaroid:nth-child(1) {
+                transform: rotate(-3deg);
+            }
+
+            .polaroid:nth-child(2) {
+                transform: rotate(2deg);
+            }
+
+            .polaroid:nth-child(3) {
+                transform: rotate(-2deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Audio Element -->
+    <audio id="bg-music" src="music.mp3" preload="auto"></audio>
+
+    <!-- Particle Background -->
+    <div id="particles"></div>
+
+    <div class="stage" id="stage">
+
+        <!-- Countdown Top Section -->
+        <div class="countdown-container" id="countdown-ui">
+            <h2 class="headline">Bekleme Alanı</h2>
+            <div class="timer-display">
+                <div class="time-unit">
+                    <span class="time-val" id="days">000</span>
+                    <span class="time-label">GÜN</span>
+                </div>
+                <div>:</div>
+                <div class="time-unit">
+                    <span class="time-val" id="hours">00</span>
+                    <span class="time-label">SAAT</span>
+                </div>
+                <div>:</div>
+                <div class="time-unit">
+                    <span class="time-val" id="minutes">00</span>
+                    <span class="time-label">DK</span>
+                </div>
+                <div>:</div>
+                <div class="time-unit">
+                    <span class="time-val" id="seconds">00</span>
+                    <span class="time-label">SN</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- The 3D Vault -->
+        <div class="vault-wrapper">
+            <div class="vault-box">
+                <div class="face front">
+                    <div class="lock-icon">🔒</div>
+                    <button class="unlock-btn" id="unlock-btn">HEDİYENİ AÇ</button>
+                </div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+        </div>
+
+        <!-- The Surprise Content -->
+        <div class="content-card">
+            <div class="letter-content">
+                <h1 class="letter-title">Canım Sevgilim,</h1>
+                <p class="letter-text">
+                    SENAM, her gün şükrettiğim evrenin bana verdiği en güzel hediyemsin.<br>
+                    İyi ki varsın hayatım, seni çok seviyorum.<br>
+                    Bu dünyadaki tek gerçeğim, sığındığım limanım ve en değerlim sensin.<br>
+                    Kalbimi ve ruhumun en derinine kadar aşığım sana; her şeyimle, en küçük zerrem bile aşık sana.<br>
+                    <br>
+                    GELECEĞİMİN KADINI ❤️
+                </p>
+            </div>
+
+            <!-- Image Slider Section -->
+            <!-- Polaroid Gallery Section -->
+            <div class="gallery-area">
+                <!-- Fotoğraflar: img1.jpg, img2.jpg, img3.jpg olarak kaydedin -->
+                <div class="polaroid" data-caption="Bizim Anımız ❤️">
+                    <img src="img1.jpg" alt="Fotoğraf 1">
+                </div>
+                <div class="polaroid" data-caption="Gülüşün...">
+                    <img src="img2.jpg" alt="Fotoğraf 2">
+                </div>
+                <div class="polaroid" data-caption="Sonsuza Dek">
+                    <img src="img3.jpg" alt="Fotoğraf 3">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const isTestMode = true; // TRUE: Geliştirme modu. FALSE: Tarih kontrolü aktif.
+        const targetDateStr = "2026-02-14T00:00:00";
+        // ---------------------
+
+        // Particle System
+        const particleContainer = document.getElementById('particles');
+        function createParticles() {
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = Math.random() * 4 + 1 + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = Math.random() * 5 + 5 + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particleContainer.appendChild(p);
+            }
+        }
+        createParticles();
+
+        const stage = document.getElementById('stage');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const countdownUI = document.getElementById('countdown-ui');
+        const audio = document.getElementById('bg-music');
+        const lockIcon = document.querySelector('.lock-icon');
+
+        const els = {
+            d: document.getElementById('days'),
+            h: document.getElementById('hours'),
+            m: document.getElementById('minutes'),
+            s: document.getElementById('seconds')
+        };
+
+        let timerInterval;
+
+        function updateTimer() {
+            const target = new Date(targetDateStr).getTime();
+            const now = new Date().getTime();
+            let diff = target - now;
+
+            if (isTestMode) diff = 0;
+
+            if (diff <= 0) {
+                clearInterval(timerInterval);
+                displayTime(0, 0, 0, 0);
+                enableAccess();
+            } else {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                displayTime(days, hours, minutes, seconds);
+            }
+        }
+
+        function displayTime(d, h, m, s) {
+            els.d.innerText = String(d).padStart(3, '0');
+            els.h.innerText = String(h).padStart(2, '0');
+            els.m.innerText = String(m).padStart(2, '0');
+            els.s.innerText = String(s).padStart(2, '0');
+        }
+
+        function enableAccess() {
+            unlockBtn.classList.add('visible');
+            lockIcon.style.opacity = '0';
+        }
+
+        updateTimer();
+        if (!isTestMode) {
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Interaction
+        unlockBtn.addEventListener('click', () => {
+            playMusic();
+            stage.classList.add('opening');
+
+            setTimeout(() => {
+                stage.classList.add('opened');
+                countdownUI.classList.add('hidden');
+            }, 600);
+        });
+
+        function playMusic() {
+            if (audio) audio.play().catch(console.error);
+        }
+
+    </script>
+</body>
+
+</html>
