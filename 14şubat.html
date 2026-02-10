@@ -444,66 +444,144 @@
                 height: auto;
                 min-height: 100vh;
                 overflow-y: auto;
-                /* Allow scrolling on mobile */
+                overflow-x: hidden;
+                /* Prevent horizontal scroll */
             }
 
             .stage {
-                padding-top: 50px;
-                padding-bottom: 50px;
-                transform: scale(0.8);
-                /* Scale everything down slightly */
+                padding-top: 30px;
+                padding-bottom: 30px;
+                padding-bottom: 80px;
+                /* Extra room at bottom */
+                transform: none;
+                /* Remove global scale */
+                gap: 20px;
+            }
+
+            .countdown-container {
+                margin-bottom: 30px;
             }
 
             .headline {
-                font-size: 1.2rem;
-                letter-spacing: 0.2rem;
+                font-size: 0.9rem;
+                letter-spacing: 0.15rem;
             }
 
             .timer-display {
-                font-size: 1.8rem;
-                gap: 0.8rem;
+                font-size: 1.3rem;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                /* Allow wrapping if needed */
             }
 
             .time-label {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
             }
 
             .vault-wrapper {
-                margin-top: 20px;
-                transform: scale(0.85);
-                /* Shrink box for mobile */
+                width: 200px;
+                height: 200px;
+                margin-top: 10px;
+                animation: none !important;
+                /* Disable floating on mobile */
+            }
+
+            .vault-box {
+                transform: rotateX(-10deg) rotateY(15deg) scale(0.8);
+                /* Less dramatic 3D, smaller */
+            }
+
+            .face {
+                width: 200px;
+                height: 200px;
+            }
+
+            .face.front {
+                transform: translateZ(100px);
+            }
+
+            .face.back {
+                transform: rotateY(180deg) translateZ(100px);
+            }
+
+            .face.right {
+                transform: rotateY(90deg) translateZ(100px);
+            }
+
+            .face.left {
+                transform: rotateY(-90deg) translateZ(100px);
+            }
+
+            .face.top {
+                transform: rotateX(90deg) translateZ(100px);
+            }
+
+            .face.bottom {
+                transform: rotateX(-90deg) translateZ(100px);
+            }
+
+            .lock-icon {
+                font-size: 2rem;
+            }
+
+            .unlock-btn {
+                font-size: 0.8rem;
+                padding: 0.7rem 1.5rem;
+                white-space: normal;
+                /* Allow text wrap */
             }
 
             .content-card {
-                width: 95%;
-                padding: 1.5rem;
-                max-height: 80vh;
-                transform: translate(-50%, 10%) scale(0.9);
-                /* Adjust start position */
+                width: 92%;
+                padding: 1.2rem;
+                max-height: none;
+                /* Allow natural height */
+                transform: translate(-50%, 20%) scale(0.95);
             }
 
             .stage.opened .content-card {
-                transform: translate(-50%, -50%) scale(0.95);
+                transform: translate(-50%, -45%) scale(1);
             }
 
             .letter-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .letter-text {
-                font-size: 1rem;
+                font-size: 0.9rem;
+                line-height: 1.6;
             }
 
             .polaroid {
-                width: 140px;
+                width: 120px;
+                padding: 8px 8px 40px 8px;
             }
 
             .polaroid img {
-                height: 120px;
+                height: 100px;
+            }
+
+            .polaroid::after {
+                font-size: 1rem;
+                bottom: 10px;
             }
 
             .gallery-area {
-                gap: 1rem;
+                gap: 0.8rem;
+                justify-content: center;
+            }
+
+            /* Simplify polaroid rotations for mobile */
+            .polaroid:nth-child(1) {
+                transform: rotate(-3deg);
+            }
+
+            .polaroid:nth-child(2) {
+                transform: rotate(2deg);
+            }
+
+            .polaroid:nth-child(3) {
+                transform: rotate(-2deg);
             }
         }
     </style>
