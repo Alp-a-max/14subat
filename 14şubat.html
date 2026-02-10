@@ -438,17 +438,72 @@
         }
 
 
-        /* --- Animations --- */
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0) rotateX(-20deg) rotateY(30deg);
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                /* Allow scrolling on mobile */
             }
 
-            50% {
-                transform: translateY(-15px) rotateX(-15deg) rotateY(25deg);
-                /* Reduced amplitude to avoid overlap */
+            .stage {
+                padding-top: 50px;
+                padding-bottom: 50px;
+                transform: scale(0.8);
+                /* Scale everything down slightly */
+            }
+
+            .headline {
+                font-size: 1.2rem;
+                letter-spacing: 0.2rem;
+            }
+
+            .timer-display {
+                font-size: 1.8rem;
+                gap: 0.8rem;
+            }
+
+            .time-label {
+                font-size: 0.6rem;
+            }
+
+            .vault-wrapper {
+                margin-top: 20px;
+                transform: scale(0.85);
+                /* Shrink box for mobile */
+            }
+
+            .content-card {
+                width: 95%;
+                padding: 1.5rem;
+                max-height: 80vh;
+                transform: translate(-50%, 10%) scale(0.9);
+                /* Adjust start position */
+            }
+
+            .stage.opened .content-card {
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+
+            .letter-title {
+                font-size: 2.5rem;
+            }
+
+            .letter-text {
+                font-size: 1rem;
+            }
+
+            .polaroid {
+                width: 140px;
+            }
+
+            .polaroid img {
+                height: 120px;
+            }
+
+            .gallery-area {
+                gap: 1rem;
             }
         }
     </style>
